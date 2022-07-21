@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
+import re
+
 html_doc = """
 <html><head><title>The Dormouse's story</title></head>
 <body>
@@ -16,25 +18,49 @@ and they lived at the bottom of a well.</p>
 
 <p class="story">...</p>
 """
+soup = BeautifulSoup(html_doc, 'lxml')
+
+print(soup.find(string=re.compile("sisters")))
 
 
-url = 'https://allo.ua/ru/products/mobile/klass-kommunikator_smartfon/'
+#
+#
+# def has_class_but_no_id(tag):
+#     return tag.has_attr('class') and not tag.has_attr('id')
+#
+#
+# print(soup.find_all(has_class_but_no_id))
 
-response = requests.get(url)
 
-soup = BeautifulSoup(response.text, 'lxml')
-items = soup.find_all('div', class_='product-card')
 
-cards = []
 
-for item in items:
-    cards.append(
-        {
-            'link':item.find('div', class_='product-card__content').find('a').get('href'),
-            'title': item.find('div', class_='product-card__content').find('a').get('title')
-        }
-    )
-print(cards)
+
+
+
+
+
+
+
+
+
+# url = 'https://allo.ua/ru/products/mobile/klass-kommunikator_smartfon/'
+#
+# response = requests.get(url)
+#
+# soup = BeautifulSoup(response.text, 'lxml')
+# items = soup.find_all('div', class_='product-card')
+#
+# cards = []
+#
+# for item in items:
+#     cards.append(
+#         {
+#             'link':item.find('div', class_='product-card__content').find('a').get('href'),
+#             'title': item.find('div', class_='product-card__content').find('a').get('title'),
+#
+#         }
+#     )
+# print(cards[1:5:2])
 
 # soup = BeautifulSoup(html_doc, 'lxml')
 # print(len(soup.contents))
