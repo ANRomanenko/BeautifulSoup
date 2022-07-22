@@ -36,5 +36,6 @@ def get_content(html):
         )
     print(cards[0])
 
-html = get_html(URL)
-get_content(html.text)
+# Проверка написанного кода (получаем здесь контент)
+# html = get_html(URL)
+# get_content(html.text)
