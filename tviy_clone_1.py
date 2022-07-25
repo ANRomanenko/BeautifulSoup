@@ -19,8 +19,41 @@ def get_html(url, params=''):
 def get_content(html):
     soup = BeautifulSoup(html, 'lxml')
     items = soup.find_all('div', class_='product-thumb')
-    print(items)
+    cards = []
+    for item in items:
+        cards.append(
+            {
+                'title': item.find('div', class_='product-name').get_text(strip=True),
+                'product_link': item.find('div', class_='product-name').find('a').get('href'),
+                'product-model': item.find('div', class_='product-model').get_text(strip=True),
+                'price': item.find('div', class_='price').get_text(strip=True)[:-7],
+                'link_image': item.find('div', class_='image').find('a').find('img').get('data-src')
+            }
+        )
+    return cards
 
 
-html = get_html(URL)
-print(get_content(html.text))
+def save_doc(items, path):
+    with open(path, 'w', newline='') as file:
+        writer = csv.writer(file, delimiter=';')
+        writer.writerow(['Название продукта', 'Ссылка', 'Код', 'Цена', 'Ссылка на картинку'])
+        for item in items:
+            writer.writerow([item['title'], item['product_link'], item['product-model'], item['price'], item['link_image']])
+
+
+def parser():
+    PAGINATION = input('Введите число страниц для парсинга: ')
+    PAGINATION = int(PAGINATION.strip())
+    html = get_html(URL)
+    if html.status_code == 200:
+        cards = []
+        for page in range(1, PAGINATION + 1):
+            print(f'Парсим страницу №: {page}')
+            html = get_html(URL, params={'page': page})
+            cards.extend(get_content(html.text))
+            save_doc(cards, CSV)
+        print('Парсинг закончен! Спарсено:', len(cards), 'карточек товара!')
+    else:
+        print('Error')
+
+parser()
