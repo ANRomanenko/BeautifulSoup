@@ -36,7 +36,7 @@ def get_content(html):
 def save_doc(items, path):
     with open(path, 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
-        writer.writerow(['Название карточки', 'Ссылка', 'Код', 'Цена', 'Ссылка на фото'])
+        writer.writerow(['Наименование', 'Ссылка', 'Код', 'Цена', 'Ссылка на фото'])
         for item in items:
             writer.writerow([item['title'], item['product_link'], item['product-model'], item['price'], item['link_image']])
 
@@ -48,12 +48,11 @@ def parser():
     if html.status_code == 200:
         cards = []
         for page in range(1, PAGINATION + 1):
-            print(f'Парсинг страницы №: {page}')
+            print(f'Парсим страницу №: {page}')
             html = get_html(URL, params={'page': page})
             cards.extend(get_content(html.text))
             save_doc(cards, CSV)
-        print('Парсинг закончен! Спарсили:', len(cards), 'карточек товара!')
-
+        print('Парсинг закончен! Спарсено', len(cards), 'карточек товара!')
     else:
         print('Error')
 
