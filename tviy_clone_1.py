@@ -12,11 +12,13 @@ HEADERS = {
 
 
 def get_html(url, params=''):
+
     response = requests.get(url, headers=HEADERS, params=params)
     return response
 
 
 def get_content(html):
+
     soup = BeautifulSoup(html, 'lxml')
     items = soup.find_all('div', class_='product-thumb')
     cards = []
@@ -24,37 +26,32 @@ def get_content(html):
         cards.append(
             {
                 'title': item.find('div', class_='product-name').get_text(strip=True),
-                'product_link': item.find('div', class_='product-name').find('a').get('href'),
-                'product-model': item.find('div', class_='product-model').get_text(strip=True),
-                'price': item.find('div', class_='price').get_text(strip=True)[:-7],
-                'link_image': item.find('div', class_='image').find('a').find('img').get('data-src')
+                'product_link': item.find('div', class_='product-name').find('a').get('href')
             }
         )
     return cards
 
 
 def save_doc(items, path):
-    with open(path, 'w', newline='') as file:
+    with open(path, "w", newline='') as file:
         writer = csv.writer(file, delimiter=';')
-        writer.writerow(['Наименование', 'Ссылка', 'Код', 'Цена', 'Ссылка на фото'])
+        writer.writerow(['Название карточки товара', 'Ссылка'])
         for item in items:
-            writer.writerow([item['title'], item['product_link'], item['product-model'], item['price'], item['link_image']])
+            writer.writerow([item['title'], item['product_link']])
 
 
 def parser():
-    PAGINATION = input('Введите число страниц для парсинга: ')
+    PAGINATION = input('Введите число страниц для парсинга товара: ')
     PAGINATION = int(PAGINATION.strip())
     html = get_html(URL)
     if html.status_code == 200:
         cards = []
         for page in range(1, PAGINATION + 1):
-            print(f'Парсим страницу №: {page}')
+            print(f'Парсинг страницы №: {page}')
             html = get_html(URL, params={'page': page})
             cards.extend(get_content(html.text))
             save_doc(cards, CSV)
-        print('Парсинг закончен! Спарсено', len(cards), 'карточек товара!')
-    else:
-        print('Error')
+        print('Парсинг завершён! Скачано', len(cards), 'карточек товара!')
 
 
 parser()
