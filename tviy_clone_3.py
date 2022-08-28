@@ -45,6 +45,7 @@ def array():
         availability = data.find('p', class_='p-trade__stock-label').get_text(strip=True).replace('✓', '')
         link_image = data.find('picture', class_='main-gallery__link').find('img').get('src')
         yield name, str(salesman), price, characteristic, availability, link_image
+        print('Собрано ', len(product_link), 'карточек товара!')
 
 
 

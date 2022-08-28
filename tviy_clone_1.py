@@ -12,21 +12,18 @@ HEADERS = {
 
 
 def get_html(url, params=''):
-
     response = requests.get(url, headers=HEADERS, params=params)
     return response
 
 
 def get_content(html):
-
-    soup = BeautifulSoup(html, 'lxml')
+    soup = BeautifulSoup(html, "lxml")
     items = soup.find_all('div', class_='product-thumb')
     cards = []
     for item in items:
         cards.append(
             {
-                'title': item.find('div', class_='product-name').get_text(strip=True),
-                'product_link': item.find('div', class_='product-name').find('a').get('href')
+                'title': item.find('div', class_='product-name').get_text(strip=True)
             }
         )
     return cards
@@ -35,13 +32,13 @@ def get_content(html):
 def save_doc(items, path):
     with open(path, "w", newline='') as file:
         writer = csv.writer(file, delimiter=';')
-        writer.writerow(['Название карточки товара', 'Ссылка'])
+        writer.writerow(['Название карточки товара'])
         for item in items:
-            writer.writerow([item['title'], item['product_link']])
+            writer.writerow([item['title']])
 
 
 def parser():
-    PAGINATION = input('Введите число страниц для парсинга товара: ')
+    PAGINATION = input('Введите число страниц для парсинга: ')
     PAGINATION = int(PAGINATION.strip())
     html = get_html(URL)
     if html.status_code == 200:
@@ -51,7 +48,7 @@ def parser():
             html = get_html(URL, params={'page': page})
             cards.extend(get_content(html.text))
             save_doc(cards, CSV)
-        print('Парсинг завершён! Скачано', len(cards), 'карточек товара!')
+        print('Парсирнг завершён! Скачено', len(cards), 'карточек товара!')
 
 
 parser()
