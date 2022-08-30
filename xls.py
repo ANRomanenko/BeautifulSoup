@@ -3,7 +3,7 @@ from tviy_clone_3 import array
 
 
 def writer(parameter):
-    book = xlsxwriter.Workbook(r"C:\Users\ARomanenko\Desktop\parser.xlsx")
+    book = xlsxwriter.Workbook(r"\\VM-WES\Перенаправление папок\andr.romanenko\Desktop\parser.xlsx")
     page = book.add_worksheet("Товары")
 
     row = 0
@@ -29,3 +29,4 @@ def writer(parameter):
 
 
 writer(array())
+print('Парсинг завершён!')

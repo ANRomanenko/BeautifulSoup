@@ -12,6 +12,14 @@ PAGINATION = input('Введите число страниц для парсин
 PAGINATION = int(PAGINATION.strip())
 
 
+def download(url):
+    resp = requests.get(url, stream=True)
+    r = open("C:\\Романенко Андрей\\image\\" + url.split("/")[-1], "wb")
+    for value in resp.iter_content(1024*1024):
+        r.write(value)
+    r.close()
+
+
 def get_url():
     for count in range(1, PAGINATION + 1):
         print(f'Парсинг страницы №: {count}')
@@ -44,8 +52,8 @@ def array():
         characteristic = data.find('td', class_='product-details__value').get_text(strip=True)
         availability = data.find('p', class_='p-trade__stock-label').get_text(strip=True).replace('✓', '')
         link_image = data.find('picture', class_='main-gallery__link').find('img').get('src')
+        download(link_image)
         yield name, str(salesman), price, characteristic, availability, link_image
-        print('Собрано ', len(product_link), 'карточек товара!')
 
 
 
